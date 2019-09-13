@@ -22,6 +22,7 @@ import {
     DigitizeButton,
     MapComponent,
     NominatimSearch,
+    MeasureButton
     // MeasureButton
 } from '@terrestris/react-geo';
 
@@ -29,14 +30,14 @@ function fromLatLon([lat, lon]) {
     return fromLonLat([lon, lat])
 }
 
-const center = fromLatLon([40.4424589, -79.9427253])
+const center = fromLatLon([40.4424589, -79.9427253]);
 // console.log(center)
 
-const minc = fromLatLon([40.440969, -79.948325])
-const maxc = fromLatLon([40.444463, -79.938144])
+const minc = fromLatLon([40.440969, -79.948325]);
+const maxc = fromLatLon([40.444463, -79.938144]);
 // console.log(minc)
 // console.log(maxc)
-const extent = [...minc, ...maxc]
+const extent = [...minc, ...maxc];
 
 const layer = new OlLayerTile({
     source: new OlSourceOsm()
@@ -74,11 +75,22 @@ const map = new OlMap({
 map.on('postcompose', map.updateSize);
 
 class App extends Component {
-    state = {visible: false};
+    state = {
+        visible: false,
+        coords: []
+    };
 
     toggleDrawer = () => {
         this.setState({visible: !this.state.visible});
-    }
+    };
+
+    addCoord = (event) => {
+        let coord = event.target.sketchCoords_;
+        this.setState((prevState) => ({
+            coords: [...prevState.coords, coord]
+        }));
+        console.log(coord);
+    };
 
     render() {
         return (
@@ -107,13 +119,21 @@ class App extends Component {
                             name="drawPoint"
                             map={map}
                             drawType="Point"
-                            onDrawEnd={(event)=> {
-                                console.log(event.target.sketchCoords_)
-                            }}
+                            onDrawEnd={this.addCoord}
                         >
                             Draw point
                         </DigitizeButton>
+                        <MeasureButton
+                            name="line"
+                            map={map}
+                            measureType="line"
+                        >
+                            Distance
+                        </MeasureButton>
                     </ToggleGroup>
+                    <ul>
+                        {this.state.coords.map((c, i) => (<li key={i}>{c[0]}, {c[1]}</li>))}
+                    </ul>
                 </Drawer>
             </div>
         );
