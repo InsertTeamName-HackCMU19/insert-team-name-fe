@@ -10,21 +10,21 @@ import OlView from 'ol/View';
 import OlLayerVector from 'ol/layer/Vector'
 import OlLayerTile from 'ol/layer/Tile';
 import OlSourceOsm from 'ol/source/OSM';
+import OlFeature from 'ol/Feature';
 import VectorSource from 'ol/source/Vector';
 import {fromLonLat} from 'ol/proj';
 import {Style, Stroke} from 'ol/style'
-import OlFeature from 'ol/Feature';
-import {fromExtent} from 'ol/geom/Polygon';
-import {Drawer} from 'antd';
-import ToggleGroup from '@terrestris/react-geo/dist/Button/ToggleGroup/ToggleGroup';
+import OlPoint from 'ol/geom/Point';
 import {
     SimpleButton,
-    DigitizeButton,
-    MapComponent,
-    NominatimSearch,
-    MeasureButton
-    // MeasureButton
+    MapComponent
 } from '@terrestris/react-geo';
+import MeasureUtil from '@terrestris/ol-util/dist/MeasureUtil/MeasureUtil';
+
+import {DEFAULT_POINT_STYLE} from './global';
+import {MainDrawer} from './component/MainDrawer';
+import {Point} from './model';
+import OlLineString from "ol/geom/LineString";
 
 function fromLatLon([lat, lon]) {
     return fromLonLat([lon, lat])
@@ -46,9 +46,9 @@ const layer = new OlLayerTile({
 const vector = new OlLayerVector({
     source: new VectorSource({
         features: [
-            new OlFeature(
-                fromExtent(extent)
-            )
+            // new OlFeature(
+            //     fromExtent(extent)
+            // ),
         ]
     }),
     style: [
@@ -57,10 +57,10 @@ const vector = new OlLayerVector({
                 color: 'red',
                 width: 3
             })
-        })
+        }),
+        DEFAULT_POINT_STYLE
     ]
 });
-
 
 const map = new OlMap({
     view: new OlView({
@@ -77,19 +77,37 @@ map.on('postcompose', map.updateSize);
 class App extends Component {
     state = {
         visible: false,
-        coords: []
+        pts: [],
+        visiblePts: [
+            new Point({name: 'test1', cor: [-8899141.351290151, 4930638.34199632]}),
+            new Point({name: 'test2', cor: [-8899183.47302255, 4930449.066277721]}),
+        ]
     };
 
     toggleDrawer = () => {
         this.setState({visible: !this.state.visible});
     };
 
-    addCoord = (event) => {
-        let coord = event.target.sketchCoords_;
-        this.setState((prevState) => ({
-            coords: [...prevState.coords, coord]
-        }));
-        console.log(coord);
+    onAddPt = (event) => {
+        let pt = new Point({
+            name: '',
+            cor: event.target.sketchCoords_
+        });
+        console.log(event.target.sketchCoords_);
+        if (this.state.pts.length > 0) {
+            let newLine = new OlLineString([this.state.pts[this.state.pts.length - 1].cor, pt.cor]);
+            // vector.getSource().addFeature(new OlFeature(newLine));
+            console.log(MeasureUtil.formatLength(newLine, map, 2));
+        }
+        this.setState({
+            pts: [...this.state.pts, pt]
+        });
+    };
+
+    updateVisiblePts = () => {
+        vector.getSource().addFeatures(this.state.visiblePts.map(
+            (pt) => new OlFeature(new OlPoint(pt.cor))
+        ));
     };
 
     render() {
@@ -103,38 +121,14 @@ class App extends Component {
                     onClick={this.toggleDrawer}
                     icon="bars"
                 />
-                <Drawer
-                    title="react-geo-application"
-                    placement="right"
-                    onClose={this.toggleDrawer}
+                <MainDrawer
+                    map={map}
+                    toggleDrawer={this.toggleDrawer}
                     visible={this.state.visible}
-                    mask={false}
-                >
-                    <NominatimSearch
-                        key="search"
-                        map={map}
-                    />
-                    <ToggleGroup>
-                        <DigitizeButton
-                            name="drawPoint"
-                            map={map}
-                            drawType="Point"
-                            onDrawEnd={this.addCoord}
-                        >
-                            Draw point
-                        </DigitizeButton>
-                        <MeasureButton
-                            name="line"
-                            map={map}
-                            measureType="line"
-                        >
-                            Distance
-                        </MeasureButton>
-                    </ToggleGroup>
-                    <ul>
-                        {this.state.coords.map((c, i) => (<li key={i}>{c[0]}, {c[1]}</li>))}
-                    </ul>
-                </Drawer>
+                    updateVisiblePts={this.updateVisiblePts}
+                    onAddPt={this.onAddPt}
+                    pts={this.state.pts}
+                />
             </div>
         );
     }
