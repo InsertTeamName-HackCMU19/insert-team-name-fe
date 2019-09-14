@@ -9,6 +9,10 @@ export class Point {
     toString() {
         return `${this.name}: ${this.cor} @ ${this.floor}-${this.building}`
     }
+
+    averageCorWith(anotherPt) {
+        return [(this.cor[0] + anotherPt.cor[0])/2, (this.cor[1] + anotherPt.cor[1])/2];
+    }
 }
 
 export class SearchRequest {

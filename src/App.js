@@ -29,12 +29,13 @@ import {MainDrawer} from './component/MainDrawer';
 import {Point} from './model';
 import OlLineString from "ol/geom/LineString";
 import {getNavigation} from "./http/api";
+import {flyTo} from "./util";
 
 function fromLatLon([lat, lon]) {
     return fromLonLat([lon, lat])
 }
 
-const center = fromLatLon([40.4424589, -79.9427253]);
+const center = [-8899342.494183049,4930561.23767311];
 // console.log(center)
 
 const minc = fromLatLon([40.440969, -79.948325]);
@@ -68,7 +69,7 @@ const map = new OlMap({
     view: new OlView({
         center: center,
         minZoom: 17.25,
-        zoom: 17.25,
+        zoom: 17.75,
         extent: extent
     }),
     layers: [layer, vector, measure]
@@ -77,7 +78,7 @@ map.on('postcompose', map.updateSize);
 
 class App extends Component {
     state = {
-        visible: false,
+        visible: true,
         navigationPts: [
             // new Point({cor: [-8899299.098043324, 4930553.531049207], floor: -1, building: 'OUTSIDE'}),
             // new Point({cor: [-8899405.653601632, 4930565.239459672], floor: 5, building: 'GHC'}),
@@ -85,7 +86,8 @@ class App extends Component {
             // new Point({cor: [-8899472.670471756, 4930580.221674304], floor: 4, building: 'NSH'}),
             // new Point({cor: [-8899509.770970259, 4930550.261168113], floor: 4, building: 'NSH'}),
             // new Point({cor: [-8899534.578520462, 4930467.462757293], floor: 4, building: 'WEH'}),
-        ]
+        ],
+        loading: false
     };
 
     toggleDrawer = () => {
@@ -112,6 +114,12 @@ class App extends Component {
                     newFeatures.push(newPtFeat);
                 });
                 vector.getSource().addFeatures(newFeatures);
+
+                let newCor = this.state.navigationPts[0].averageCorWith(this.state.navigationPts[this.state.navigationPts.length - 1]);
+
+                setTimeout(() => {
+                    flyTo(newCor, map.getView(), (complete) => {})
+                }, 1);
             });
         } catch (e) {
             console.error(e);

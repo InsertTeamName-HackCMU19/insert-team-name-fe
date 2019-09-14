@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import {DigitizeButton, MeasureButton, SimpleButton} from "@terrestris/react-geo";
 import ToggleGroup from "@terrestris/react-geo/dist/Button/ToggleGroup/ToggleGroup";
 import MeasureUtil from '@terrestris/ol-util/dist/MeasureUtil/MeasureUtil';
-import {Drawer, Input} from "antd";
+import {Drawer, Input, message} from "antd";
 import {Point} from "../model";
 import OlLineString from "ol/geom/LineString";
 // import OlFeature from "ol/Feature";
@@ -36,6 +36,19 @@ export class MainDrawer extends Component {
         });
     };
 
+    disableSearch = () => {
+        return this.state.startText === '' && this.state.endText === '';
+    };
+
+    onSearch = () => {
+        let easterEgg = this.state.startText === this.state.endText;
+        if (easterEgg) {
+            message.info('Turn 360° around and you are here.');
+        } else {
+            this.props.updateNavigationPts(this.state.startText, this.state.endText)
+        }
+    };
+
     render() {
         let devTools = null;
         if (process.env.NODE_ENV === 'development') {
@@ -62,18 +75,23 @@ export class MainDrawer extends Component {
 
         return (
             <Drawer
-                title="react-geo-application"
+                title="Iter"
                 placement="right"
                 onClose={this.props.toggleDrawer}
                 visible={this.props.visible}
                 mask={false}
             >
-                <Input className="marginBottom" placeholder="Start" value={this.state.startText} onChange={(event) => {this.setState({startText: event.target.value})}}/>
-                <Input className="marginBottom" placeholder="Destination" value={this.state.endText} onChange={(event) => {this.setState({endText: event.target.value})}}/>
+                <Input className="marginBottom" placeholder="Start" value={this.state.startText} onChange={(event) => {
+                    this.setState({startText: event.target.value})
+                }}/>
+                <Input className="marginBottom" placeholder="Destination" value={this.state.endText}
+                       onChange={(event) => {
+                           this.setState({endText: event.target.value})
+                       }}/>
                 <SimpleButton
                     className="marginBottom"
-                    onClick={() => {this.props.updateNavigationPts(this.state.startText, this.state.endText)}}
-                    disabled={this.state.startText === '' && this.state.endText === ''}
+                    onClick={this.onSearch}
+                    disabled={this.disableSearch()}
                 >Search</SimpleButton>
                 {devTools}
                 <ul>
