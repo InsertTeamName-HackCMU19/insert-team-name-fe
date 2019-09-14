@@ -14,15 +14,16 @@ import OlFeature from 'ol/Feature';
 import VectorSource from 'ol/source/Vector';
 import {fromLonLat} from 'ol/proj';
 import OlPoint from 'ol/geom/Point';
+import OlStyle from 'ol/style/Style';
 import {
     SimpleButton,
     MapComponent
 } from '@terrestris/react-geo';
 
 import {
-    DEFAULT_POINT_STYLE,
+    DEFAULT_POINT_STYLE, DEFAULT_POINT_STYLE_CONFIG,
     DEFAULT_STRIKE_STYLE,
-    DEFAULT_STRIKE_STYLES,
+    DEFAULT_STRIKE_STYLES, FONT,
     getStrikeStyleIndex
 } from './global';
 import {MainDrawer} from './component/MainDrawer';
@@ -30,6 +31,7 @@ import {Point} from './model';
 import OlLineString from "ol/geom/LineString";
 import {getNavigation} from "./http/api";
 import {flyTo} from "./util";
+import Text from "ol/style/Text";
 
 function fromLatLon([lat, lon]) {
     return fromLonLat([lon, lat])
@@ -69,7 +71,7 @@ const map = new OlMap({
     view: new OlView({
         center: center,
         minZoom: 17.25,
-        zoom: 17.75,
+        zoom: 18,
         extent: extent
     }),
     layers: [layer, vector, measure]
@@ -101,21 +103,94 @@ class App extends Component {
             this.setState({navigationPts: points}, () => {
                 vector.getSource().clear();
                 let newFeatures = [];
+                let lastIndex = this.state.navigationPts.length - 1;
                 let styleIndex = 0;
+                let status = '';
+                let prevPtFeat;
+                let prevTextToShow = '';
+                let beginDownstairs = false;
+
                 this.state.navigationPts.forEach((pt, i) => {
                     let newPtFeat = new OlFeature(new OlPoint(pt.cor));
-                    if (i > 0) {
+                    let textToShow = '';
+
+                    if (i === 0) {
+                        textToShow = start;
+                        if (lastIndex > 0 && this.state.navigationPts[1].floor < pt.floor) {
+                            beginDownstairs = true;
+                        }
+                    } else {
                         let prevPt = this.state.navigationPts[i - 1];
                         let newLineFeat = new OlFeature(new OlLineString([prevPt.cor, pt.cor]));
                         styleIndex = getStrikeStyleIndex(prevPt, pt, styleIndex);
                         newLineFeat.setStyle(DEFAULT_STRIKE_STYLES[styleIndex]);
                         newFeatures.push(newLineFeat);
+
+                        if (i === lastIndex) {
+                            textToShow = end;
+                        }
+
+                        if (pt.building === prevPt.building) {
+                            if (pt.floor > prevPt.floor) {
+                                console.log('u');
+                                status = 'Upstairs';
+                                // if (status !== 'Upstairs') {
+                                //     prevTextToShow = prevTextToShow === '' ? status : prevTextToShow;
+                                //
+                                // }
+                            } else if (pt.floor < prevPt.floor) {
+                                console.log('d');
+                                status = 'Downstairs';
+                                // if (status !== 'Downstairs') {
+                                //     prevTextToShow = prevTextToShow === '' ? status : prevTextToShow;
+                                //     status = 'Downstairs';
+                                //
+                                //     if (beginDownstairs) {
+                                //         prevTextToShow = ''
+                                //     }
+                                //     beginDownstairs = false;
+                                // }
+                            } else {
+                                console.log('s');
+                                if (status === 'Upstairs' || status === 'Downstairs') {
+                                    prevTextToShow = prevTextToShow === '' ? status : prevTextToShow;
+                                    if (status === 'Downstairs' && beginDownstairs) {
+                                        prevTextToShow = '';
+                                        beginDownstairs = false;
+                                    }
+                                    status = ''
+                                }
+                            }
+                        }
                     }
+
+                    if (prevTextToShow.length && i < lastIndex) {
+                        prevPtFeat.setStyle(new OlStyle({
+                            ...DEFAULT_POINT_STYLE_CONFIG,
+                            text: new Text( {
+                                text: '\n\n\n' + prevTextToShow + '\nto floor ' + pt.floor,
+                                font: FONT
+                            })
+                        }));
+                    }
+
+                    if (textToShow.length) {
+                        newPtFeat.setStyle(new OlStyle({
+                            ...DEFAULT_POINT_STYLE_CONFIG,
+                            text: new Text( {
+                                text: '\n\n' + textToShow,
+                                font: FONT
+                            })
+                        }));
+                    }
+
+                    prevPtFeat = newPtFeat;
+                    prevTextToShow = textToShow;
                     newFeatures.push(newPtFeat);
                 });
                 vector.getSource().addFeatures(newFeatures);
 
-                let newCor = this.state.navigationPts[0].averageCorWith(this.state.navigationPts[this.state.navigationPts.length - 1]);
+                let newCor = this.state.navigationPts[0].averageCorWith(this.state.navigationPts[lastIndex]);
 
                 setTimeout(() => {
                     flyTo(newCor, map.getView(), (complete) => {})
