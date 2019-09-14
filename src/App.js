@@ -13,7 +13,6 @@ import OlSourceOsm from 'ol/source/OSM';
 import OlFeature from 'ol/Feature';
 import VectorSource from 'ol/source/Vector';
 import {fromLonLat} from 'ol/proj';
-import {Style, Stroke} from 'ol/style'
 import OlPoint from 'ol/geom/Point';
 import {
     SimpleButton,
@@ -21,7 +20,12 @@ import {
 } from '@terrestris/react-geo';
 import MeasureUtil from '@terrestris/ol-util/dist/MeasureUtil/MeasureUtil';
 
-import {DEFAULT_POINT_STYLE} from './global';
+import {
+    DEFAULT_POINT_STYLE,
+    DEFAULT_STRIKE_STYLE,
+    DEFAULT_STRIKE_STYLES,
+    getStrikeStyleIndex
+} from './global';
 import {MainDrawer} from './component/MainDrawer';
 import {Point} from './model';
 import OlLineString from "ol/geom/LineString";
@@ -37,31 +41,20 @@ const minc = fromLatLon([40.440969, -79.948325]);
 const maxc = fromLatLon([40.444463, -79.938144]);
 // console.log(minc)
 // console.log(maxc)
-const extent = [...minc, ...maxc];
 
+const extent = [...minc, ...maxc];
 const layer = new OlLayerTile({
     source: new OlSourceOsm()
 });
-
 const vector = new OlLayerVector({
     source: new VectorSource({
-        features: [
-            // new OlFeature(
-            //     fromExtent(extent)
-            // ),
-        ]
+        features: []
     }),
     style: [
-        new Style({
-            stroke: new Stroke({
-                color: 'red',
-                width: 3
-            })
-        }),
+        DEFAULT_STRIKE_STYLE,
         DEFAULT_POINT_STYLE
     ]
 });
-
 const map = new OlMap({
     view: new OlView({
         center: center,
@@ -71,16 +64,19 @@ const map = new OlMap({
     }),
     layers: [layer, vector]
 });
-
 map.on('postcompose', map.updateSize);
 
 class App extends Component {
     state = {
         visible: false,
         pts: [],
-        visiblePts: [
-            new Point({name: 'test1', cor: [-8899141.351290151, 4930638.34199632]}),
-            new Point({name: 'test2', cor: [-8899183.47302255, 4930449.066277721]}),
+        navigationPts: [
+            new Point({cor: [-8899299.098043324, 4930553.531049207], floor: -1, building: 'OUTSIDE'}),
+            new Point({cor: [-8899405.653601632, 4930565.239459672], floor: 5, building: 'GHC'}),
+            new Point({cor: [-8899405.653601632, 4930565.239459672], floor: 4, building: 'GHC'}),
+            new Point({cor: [-8899472.670471756, 4930580.221674304], floor: 4, building: 'NSH'}),
+            new Point({cor: [-8899509.770970259, 4930550.261168113], floor: 4, building: 'NSH'}),
+            new Point({cor: [-8899534.578520462, 4930467.462757293], floor: 4, building: 'WEH'}),
         ]
     };
 
@@ -95,8 +91,12 @@ class App extends Component {
         });
         console.log(event.target.sketchCoords_);
         if (this.state.pts.length > 0) {
-            let newLine = new OlLineString([this.state.pts[this.state.pts.length - 1].cor, pt.cor]);
-            // vector.getSource().addFeature(new OlFeature(newLine));
+            let prevPt = this.state.pts[this.state.pts.length - 1];
+            pt.floor = prevPt.floor + 1;
+            let newLine = new OlLineString([prevPt.cor, pt.cor]);
+            let newLineFeat = new OlFeature(newLine);
+            newLineFeat.setStyle(getStrikeStyleIndex(prevPt, pt, 0));
+            vector.getSource().addFeature(newLineFeat);
             console.log(MeasureUtil.formatLength(newLine, map, 2));
         }
         this.setState({
@@ -104,10 +104,21 @@ class App extends Component {
         });
     };
 
-    updateVisiblePts = () => {
-        vector.getSource().addFeatures(this.state.visiblePts.map(
-            (pt) => new OlFeature(new OlPoint(pt.cor))
-        ));
+    updateNavigationPts = () => {
+        let newFeatures = [];
+        let styleIndex = 0;
+        this.state.navigationPts.forEach((pt, i) => {
+            let newPtFeat = new OlFeature(new OlPoint(pt.cor));
+            if (i > 0) {
+                let prevPt = this.state.navigationPts[i - 1];
+                let newLineFeat = new OlFeature(new OlLineString([prevPt.cor, pt.cor]));
+                styleIndex = getStrikeStyleIndex(prevPt, pt, styleIndex);
+                newLineFeat.setStyle(DEFAULT_STRIKE_STYLES[styleIndex]);
+                newFeatures.push(newLineFeat);
+            }
+            newFeatures.push(newPtFeat);
+        });
+        vector.getSource().addFeatures(newFeatures);
     };
 
     render() {
@@ -125,7 +136,7 @@ class App extends Component {
                     map={map}
                     toggleDrawer={this.toggleDrawer}
                     visible={this.state.visible}
-                    updateVisiblePts={this.updateVisiblePts}
+                    updateNavigationPts={this.updateNavigationPts}
                     onAddPt={this.onAddPt}
                     pts={this.state.pts}
                 />

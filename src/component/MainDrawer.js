@@ -1,7 +1,7 @@
 import React, {PureComponent} from "react";
 import {DigitizeButton, MeasureButton, NominatimSearch, SimpleButton} from "@terrestris/react-geo";
 import ToggleGroup from "@terrestris/react-geo/dist/Button/ToggleGroup/ToggleGroup";
-import {Drawer} from "antd";
+import {Drawer, Input} from "antd";
 
 export class MainDrawer extends PureComponent {
     render() {
@@ -13,11 +13,9 @@ export class MainDrawer extends PureComponent {
                 visible={this.props.visible}
                 mask={false}
             >
-                <NominatimSearch
-                    key="search"
-                    map={this.props.map}
-                />
-                <SimpleButton onClick={this.props.updateVisiblePts}>Magic!</SimpleButton>
+                <Input placeholder="Start"/>
+                <Input placeholder="Destination"/>
+                <SimpleButton onClick={this.props.updateNavigationPts}>Search</SimpleButton>
                 <ToggleGroup>
                     <DigitizeButton
                         name="drawPoint"
