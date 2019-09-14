@@ -29,6 +29,7 @@ import {
 import {MainDrawer} from './component/MainDrawer';
 import {Point} from './model';
 import OlLineString from "ol/geom/LineString";
+import {getNavigation} from "./http/api";
 
 function fromLatLon([lat, lon]) {
     return fromLonLat([lon, lat])
@@ -71,12 +72,12 @@ class App extends Component {
         visible: false,
         pts: [],
         navigationPts: [
-            new Point({cor: [-8899299.098043324, 4930553.531049207], floor: -1, building: 'OUTSIDE'}),
-            new Point({cor: [-8899405.653601632, 4930565.239459672], floor: 5, building: 'GHC'}),
-            new Point({cor: [-8899405.653601632, 4930565.239459672], floor: 4, building: 'GHC'}),
-            new Point({cor: [-8899472.670471756, 4930580.221674304], floor: 4, building: 'NSH'}),
-            new Point({cor: [-8899509.770970259, 4930550.261168113], floor: 4, building: 'NSH'}),
-            new Point({cor: [-8899534.578520462, 4930467.462757293], floor: 4, building: 'WEH'}),
+            // new Point({cor: [-8899299.098043324, 4930553.531049207], floor: -1, building: 'OUTSIDE'}),
+            // new Point({cor: [-8899405.653601632, 4930565.239459672], floor: 5, building: 'GHC'}),
+            // new Point({cor: [-8899405.653601632, 4930565.239459672], floor: 4, building: 'GHC'}),
+            // new Point({cor: [-8899472.670471756, 4930580.221674304], floor: 4, building: 'NSH'}),
+            // new Point({cor: [-8899509.770970259, 4930550.261168113], floor: 4, building: 'NSH'}),
+            // new Point({cor: [-8899534.578520462, 4930467.462757293], floor: 4, building: 'WEH'}),
         ]
     };
 
@@ -104,21 +105,30 @@ class App extends Component {
         });
     };
 
-    updateNavigationPts = () => {
-        let newFeatures = [];
-        let styleIndex = 0;
-        this.state.navigationPts.forEach((pt, i) => {
-            let newPtFeat = new OlFeature(new OlPoint(pt.cor));
-            if (i > 0) {
-                let prevPt = this.state.navigationPts[i - 1];
-                let newLineFeat = new OlFeature(new OlLineString([prevPt.cor, pt.cor]));
-                styleIndex = getStrikeStyleIndex(prevPt, pt, styleIndex);
-                newLineFeat.setStyle(DEFAULT_STRIKE_STYLES[styleIndex]);
-                newFeatures.push(newLineFeat);
-            }
-            newFeatures.push(newPtFeat);
-        });
-        vector.getSource().addFeatures(newFeatures);
+    updateNavigationPts = async (start, end) => {
+        try {
+            let objs = await getNavigation(start, end);
+            let points = objs.map((obj) => new Point(obj));
+            this.setState({navigationPts: points}, () => {
+                vector.getSource().clear();
+                let newFeatures = [];
+                let styleIndex = 0;
+                this.state.navigationPts.forEach((pt, i) => {
+                    let newPtFeat = new OlFeature(new OlPoint(pt.cor));
+                    if (i > 0) {
+                        let prevPt = this.state.navigationPts[i - 1];
+                        let newLineFeat = new OlFeature(new OlLineString([prevPt.cor, pt.cor]));
+                        styleIndex = getStrikeStyleIndex(prevPt, pt, styleIndex);
+                        newLineFeat.setStyle(DEFAULT_STRIKE_STYLES[styleIndex]);
+                        newFeatures.push(newLineFeat);
+                    }
+                    newFeatures.push(newPtFeat);
+                });
+                vector.getSource().addFeatures(newFeatures);
+            });
+        } catch (e) {
+            console.error(e);
+        }
     };
 
     render() {

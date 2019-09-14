@@ -1,9 +1,14 @@
-import React, {PureComponent} from "react";
-import {DigitizeButton, MeasureButton, NominatimSearch, SimpleButton} from "@terrestris/react-geo";
+import React, {Component} from "react";
+import {DigitizeButton, MeasureButton, SimpleButton} from "@terrestris/react-geo";
 import ToggleGroup from "@terrestris/react-geo/dist/Button/ToggleGroup/ToggleGroup";
 import {Drawer, Input} from "antd";
 
-export class MainDrawer extends PureComponent {
+export class MainDrawer extends Component {
+    state = {
+        startText: '',
+        endText: ''
+    };
+
     render() {
         return (
             <Drawer
@@ -13,9 +18,9 @@ export class MainDrawer extends PureComponent {
                 visible={this.props.visible}
                 mask={false}
             >
-                <Input placeholder="Start"/>
-                <Input placeholder="Destination"/>
-                <SimpleButton onClick={this.props.updateNavigationPts}>Search</SimpleButton>
+                <Input style={{margin: '0 8px 8px 0'}} placeholder="Start" value={this.state.startText} onChange={(event) => {this.setState({startText: event.target.value})}}/>
+                <Input style={{margin: '0 8px 8px 0'}} placeholder="Destination" value={this.state.endText} onChange={(event) => {this.setState({endText: event.target.value})}}/>
+                <SimpleButton onClick={() => {this.props.updateNavigationPts(this.state.startText, this.state.endText)}}>Search</SimpleButton>
                 <ToggleGroup>
                     <DigitizeButton
                         name="drawPoint"
