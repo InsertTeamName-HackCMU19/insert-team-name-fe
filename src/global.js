@@ -3,7 +3,7 @@ import OlStyleCircle from 'ol/style/Circle';
 import OlStyleFill from 'ol/style/Fill';
 import OlStyleStroke from 'ol/style/Stroke';
 
-export const SERVER_URL = 'http://128.237.184.142:5000/';
+export const SERVER_URL = 'http://localhost:5000/';
 
 export const getStrikeStyleIndex = (pt1, pt2, styleIndex) => {
     if (pt1.building === pt2.building && pt1.floor !== pt2.floor)
@@ -60,7 +60,7 @@ export const DEFAULT_STRIKE_STYLES = [
 
 export const DEFAULT_POINT_STYLE = new OlStyleStyle({
     image: new OlStyleCircle({
-        radius: 7,
+        radius: 5,
         fill: new OlStyleFill({
             color: 'rgba(154, 26, 56, 0.5)'
         }),

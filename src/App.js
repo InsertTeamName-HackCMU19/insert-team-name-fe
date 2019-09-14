@@ -18,7 +18,6 @@ import {
     SimpleButton,
     MapComponent
 } from '@terrestris/react-geo';
-import MeasureUtil from '@terrestris/ol-util/dist/MeasureUtil/MeasureUtil';
 
 import {
     DEFAULT_POINT_STYLE,
@@ -56,6 +55,15 @@ const vector = new OlLayerVector({
         DEFAULT_POINT_STYLE
     ]
 });
+const measure = new OlLayerVector({
+    source: new VectorSource({
+        features: []
+    }),
+    style: [
+        DEFAULT_STRIKE_STYLE,
+        DEFAULT_POINT_STYLE
+    ]
+});
 const map = new OlMap({
     view: new OlView({
         center: center,
@@ -63,14 +71,13 @@ const map = new OlMap({
         zoom: 17.25,
         extent: extent
     }),
-    layers: [layer, vector]
+    layers: [layer, vector, measure]
 });
 map.on('postcompose', map.updateSize);
 
 class App extends Component {
     state = {
         visible: false,
-        pts: [],
         navigationPts: [
             // new Point({cor: [-8899299.098043324, 4930553.531049207], floor: -1, building: 'OUTSIDE'}),
             // new Point({cor: [-8899405.653601632, 4930565.239459672], floor: 5, building: 'GHC'}),
@@ -83,26 +90,6 @@ class App extends Component {
 
     toggleDrawer = () => {
         this.setState({visible: !this.state.visible});
-    };
-
-    onAddPt = (event) => {
-        let pt = new Point({
-            name: '',
-            cor: event.target.sketchCoords_
-        });
-        console.log(event.target.sketchCoords_);
-        if (this.state.pts.length > 0) {
-            let prevPt = this.state.pts[this.state.pts.length - 1];
-            pt.floor = prevPt.floor + 1;
-            let newLine = new OlLineString([prevPt.cor, pt.cor]);
-            let newLineFeat = new OlFeature(newLine);
-            newLineFeat.setStyle(getStrikeStyleIndex(prevPt, pt, 0));
-            vector.getSource().addFeature(newLineFeat);
-            console.log(MeasureUtil.formatLength(newLine, map, 2));
-        }
-        this.setState({
-            pts: [...this.state.pts, pt]
-        });
     };
 
     updateNavigationPts = async (start, end) => {
@@ -144,10 +131,10 @@ class App extends Component {
                 />
                 <MainDrawer
                     map={map}
+                    layer={measure}
                     toggleDrawer={this.toggleDrawer}
                     visible={this.state.visible}
                     updateNavigationPts={this.updateNavigationPts}
-                    onAddPt={this.onAddPt}
                     pts={this.state.pts}
                 />
             </div>
