@@ -1012,7 +1012,7 @@
     "@svgr/plugin-svgo" "^4.3.1"
     loader-utils "^1.2.3"
 
-"@terrestris/base-util@^0.2.0", "@terrestris/base-util@^0.2.1":
+"@terrestris/base-util@^0.2.0", "@terrestris/base-util@^0.2.1", "@terrestris/base-util@^0.2.2":
   version "0.2.2"
   resolved "https://registry.yarnpkg.com/@terrestris/base-util/-/base-util-0.2.2.tgz#7444a61d32e1fb304113e87624deaaea698ddd76"
   dependencies:
@@ -1036,6 +1036,16 @@
     "@turf/turf" "^5.1.6"
     lodash "^4.17.15"
     proj4 "^2.5.0"
+    shpjs "^3.4.3"
+
+"@terrestris/ol-util@latest":
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/@terrestris/ol-util/-/ol-util-4.0.1.tgz#d74d56a45d71d7bbb9eb48638ead35af2add2b4b"
+  dependencies:
+    "@terrestris/base-util" "^0.2.2"
+    "@turf/turf" "^5.1.6"
+    lodash "^4.17.15"
+    proj4 "^2.6.0"
     shpjs "^3.4.3"
 
 "@terrestris/react-geo@^11.4.4":
@@ -2421,8 +2431,8 @@ acorn-walk@^6.0.1:
   resolved "https://registry.yarnpkg.com/acorn-walk/-/acorn-walk-6.2.0.tgz#123cb8f3b84c2171f1f7fb252615b1c78a6b1a8c"
 
 acorn@^5.5.3:
-  version "5.7.3"
-  resolved "https://registry.yarnpkg.com/acorn/-/acorn-5.7.3.tgz#67aa231bf8812974b85235a96771eb6bd07ea279"
+  version "5.7.4"
+  resolved "https://registry.yarnpkg.com/acorn/-/acorn-5.7.4.tgz#3e8d8a9947d0599a1796d10225d7432f4a4acf5e"
 
 acorn@^6.0.1, acorn@^6.0.4, acorn@^6.0.7, acorn@^6.2.1:
   version "6.3.0"
@@ -8246,6 +8256,13 @@ progress@^2.0.0:
 proj4@^2.1.4, proj4@^2.5.0:
   version "2.5.0"
   resolved "https://registry.yarnpkg.com/proj4/-/proj4-2.5.0.tgz#e3a88ce7e7a07221aaccbc6760dd2eafee745f03"
+  dependencies:
+    mgrs "1.0.0"
+    wkt-parser "^1.2.0"
+
+proj4@^2.6.0:
+  version "2.6.0"
+  resolved "https://registry.yarnpkg.com/proj4/-/proj4-2.6.0.tgz#154c0e8eeb1aaae9914ec387753396cbc003ae72"
   dependencies:
     mgrs "1.0.0"
     wkt-parser "^1.2.0"
