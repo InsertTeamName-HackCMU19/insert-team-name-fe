@@ -1028,6 +1028,22 @@
     url-search-params "^1.1.0"
     validator "^11.1.0"
 
+"@terrestris/base-util@^0.2.2":
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/@terrestris/base-util/-/base-util-0.2.3.tgz#d5ece475c899af45080178ad1c5611e393155526"
+  dependencies:
+    "@types/lodash" "^4.14.138"
+    "@types/loglevel" "^1.6.3"
+    "@types/url-parse" "^1.4.3"
+    "@types/url-search-params" "^1.1.0"
+    "@types/validator" "^13.0.0"
+    lodash "^4.17.15"
+    loglevel "^1.6.3"
+    query-string "^6.8.2"
+    url-parse "^1.4.7"
+    url-search-params "^1.1.0"
+    validator "^13.0.0"
+
 "@terrestris/ol-util@^3.0.0":
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/@terrestris/ol-util/-/ol-util-3.0.1.tgz#35d5eb23116d32cfbfdc713b1a7c883bfc8c0ab6"
@@ -1036,6 +1052,16 @@
     "@turf/turf" "^5.1.6"
     lodash "^4.17.15"
     proj4 "^2.5.0"
+    shpjs "^3.4.3"
+
+"@terrestris/ol-util@latest":
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/@terrestris/ol-util/-/ol-util-4.0.1.tgz#d74d56a45d71d7bbb9eb48638ead35af2add2b4b"
+  dependencies:
+    "@terrestris/base-util" "^0.2.2"
+    "@turf/turf" "^5.1.6"
+    lodash "^4.17.15"
+    proj4 "^2.6.0"
     shpjs "^3.4.3"
 
 "@terrestris/react-geo@^11.4.4":
@@ -2216,6 +2242,10 @@
   version "10.11.3"
   resolved "https://registry.yarnpkg.com/@types/validator/-/validator-10.11.3.tgz#945799bef24a953c5bc02011ca8ad79331a3ef25"
 
+"@types/validator@^13.0.0":
+  version "13.1.0"
+  resolved "https://registry.yarnpkg.com/@types/validator/-/validator-13.1.0.tgz#3d776127dbce7dd31fc06f86d3428b072e631eba"
+
 "@types/yargs@^12.0.2", "@types/yargs@^12.0.9":
   version "12.0.12"
   resolved "https://registry.yarnpkg.com/@types/yargs/-/yargs-12.0.12.tgz#45dd1d0638e8c8f153e87d296907659296873916"
@@ -2949,8 +2979,8 @@ bluebird@^3.5.5:
   resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-3.5.5.tgz#a8d0afd73251effbbd5fe384a77d73003c17a71f"
 
 bn.js@^4.0.0, bn.js@^4.1.0, bn.js@^4.1.1, bn.js@^4.4.0:
-  version "4.11.8"
-  resolved "https://registry.yarnpkg.com/bn.js/-/bn.js-4.11.8.tgz#2cde09eb5ee341f484746bb0309b3253b1b1442f"
+  version "4.11.9"
+  resolved "https://registry.yarnpkg.com/bn.js/-/bn.js-4.11.9.tgz#26d556829458f9d1e81fc48952493d0ba3507828"
 
 body-parser@1.19.0:
   version "1.19.0"
@@ -4220,8 +4250,8 @@ electron-to-chromium@^1.3.191:
   resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.225.tgz#c6786475b5eb5f491ade01a78b82ba2c5bfdf72b"
 
 elliptic@^6.0.0:
-  version "6.5.0"
-  resolved "https://registry.yarnpkg.com/elliptic/-/elliptic-6.5.0.tgz#2b8ed4c891b7de3200e14412a5b8248c7af505ca"
+  version "6.5.3"
+  resolved "https://registry.yarnpkg.com/elliptic/-/elliptic-6.5.3.tgz#cb59eb2efdaf73a0bd78ccd7015a62ad6e0f93d6"
   dependencies:
     bn.js "^4.4.0"
     brorand "^1.0.1"
@@ -8250,6 +8280,13 @@ proj4@^2.1.4, proj4@^2.5.0:
     mgrs "1.0.0"
     wkt-parser "^1.2.0"
 
+proj4@^2.6.0:
+  version "2.6.2"
+  resolved "https://registry.yarnpkg.com/proj4/-/proj4-2.6.2.tgz#4665d7cbc30fd356375007c2fed53b07dbda1d67"
+  dependencies:
+    mgrs "1.0.0"
+    wkt-parser "^1.2.4"
+
 promise-inflight@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/promise-inflight/-/promise-inflight-1.0.1.tgz#98472870bf228132fcbdd868129bad12c3c029e3"
@@ -10472,6 +10509,10 @@ validator@^11.1.0:
   version "11.1.0"
   resolved "https://registry.yarnpkg.com/validator/-/validator-11.1.0.tgz#ac18cac42e0aa5902b603d7a5d9b7827e2346ac4"
 
+validator@^13.0.0:
+  version "13.1.1"
+  resolved "https://registry.yarnpkg.com/validator/-/validator-13.1.1.tgz#f8811368473d2173a9d8611572b58c5783f223bf"
+
 vary@~1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/vary/-/vary-1.1.2.tgz#2299f02c6ded30d4a5961b0b9f74524a18f634fc"
@@ -10697,6 +10738,10 @@ wide-align@^1.1.0:
 wkt-parser@^1.2.0:
   version "1.2.3"
   resolved "https://registry.yarnpkg.com/wkt-parser/-/wkt-parser-1.2.3.tgz#240fe1dacc816bfe5674b66180041059eaa9a9ba"
+
+wkt-parser@^1.2.4:
+  version "1.2.4"
+  resolved "https://registry.yarnpkg.com/wkt-parser/-/wkt-parser-1.2.4.tgz#e42ba7b96f13aef82a2da9056e2d87da0fec5393"
 
 wordwrap@~0.0.2:
   version "0.0.3"
