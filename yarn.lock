@@ -1028,6 +1028,22 @@
     url-search-params "^1.1.0"
     validator "^11.1.0"
 
+"@terrestris/base-util@^0.2.2":
+  version "0.2.4"
+  resolved "https://registry.yarnpkg.com/@terrestris/base-util/-/base-util-0.2.4.tgz#f09affe48ae2d50a253d5a084176302c423107bc"
+  dependencies:
+    "@types/lodash" "^4.14.138"
+    "@types/loglevel" "^1.6.3"
+    "@types/url-parse" "^1.4.3"
+    "@types/url-search-params" "^1.1.0"
+    "@types/validator" "^13.0.0"
+    lodash "^4.17.15"
+    loglevel "^1.6.3"
+    query-string "^6.8.2"
+    url-parse "^1.4.7"
+    url-search-params "^1.1.0"
+    validator "^13.0.0"
+
 "@terrestris/ol-util@^3.0.0":
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/@terrestris/ol-util/-/ol-util-3.0.1.tgz#35d5eb23116d32cfbfdc713b1a7c883bfc8c0ab6"
@@ -1036,6 +1052,16 @@
     "@turf/turf" "^5.1.6"
     lodash "^4.17.15"
     proj4 "^2.5.0"
+    shpjs "^3.4.3"
+
+"@terrestris/ol-util@latest":
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/@terrestris/ol-util/-/ol-util-4.0.1.tgz#d74d56a45d71d7bbb9eb48638ead35af2add2b4b"
+  dependencies:
+    "@terrestris/base-util" "^0.2.2"
+    "@turf/turf" "^5.1.6"
+    lodash "^4.17.15"
+    proj4 "^2.6.0"
     shpjs "^3.4.3"
 
 "@terrestris/react-geo@^11.4.4":
@@ -2215,6 +2241,10 @@
 "@types/validator@^10.11.3":
   version "10.11.3"
   resolved "https://registry.yarnpkg.com/@types/validator/-/validator-10.11.3.tgz#945799bef24a953c5bc02011ca8ad79331a3ef25"
+
+"@types/validator@^13.0.0":
+  version "13.1.0"
+  resolved "https://registry.yarnpkg.com/@types/validator/-/validator-13.1.0.tgz#3d776127dbce7dd31fc06f86d3428b072e631eba"
 
 "@types/yargs@^12.0.2", "@types/yargs@^12.0.9":
   version "12.0.12"
@@ -4549,9 +4579,9 @@ etag@~1.8.1:
   version "1.8.1"
   resolved "https://registry.yarnpkg.com/etag/-/etag-1.8.1.tgz#41ae2eeb65efa62268aebfea83ac7d79299b0887"
 
-eventemitter3@^3.0.0:
-  version "3.1.2"
-  resolved "https://registry.yarnpkg.com/eventemitter3/-/eventemitter3-3.1.2.tgz#2d3d48f9c346698fce83a85d7d664e98535df6e7"
+eventemitter3@^4.0.0:
+  version "4.0.7"
+  resolved "https://registry.yarnpkg.com/eventemitter3/-/eventemitter3-4.0.7.tgz#2de9b68f6528d5644ef5c59526a1b4a07306169f"
 
 eventlistener@0.0.1:
   version "0.0.1"
@@ -4868,10 +4898,8 @@ flush-write-stream@^1.0.0:
     readable-stream "^2.3.6"
 
 follow-redirects@^1.0.0:
-  version "1.7.0"
-  resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.7.0.tgz#489ebc198dc0e7f64167bd23b03c4c19b5784c76"
-  dependencies:
-    debug "^3.2.6"
+  version "1.13.0"
+  resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.13.0.tgz#b42e8d93a2a7eea5ed88633676d6597bc8e384db"
 
 font-awesome@^4.3.0:
   version "4.7.0"
@@ -5373,10 +5401,10 @@ http-proxy-middleware@^0.19.1:
     micromatch "^3.1.10"
 
 http-proxy@^1.17.0:
-  version "1.17.0"
-  resolved "https://registry.yarnpkg.com/http-proxy/-/http-proxy-1.17.0.tgz#7ad38494658f84605e2f6db4436df410f4e5be9a"
+  version "1.18.1"
+  resolved "https://registry.yarnpkg.com/http-proxy/-/http-proxy-1.18.1.tgz#401541f0534884bbf95260334e72f88ee3976549"
   dependencies:
-    eventemitter3 "^3.0.0"
+    eventemitter3 "^4.0.0"
     follow-redirects "^1.0.0"
     requires-port "^1.0.0"
 
@@ -8250,6 +8278,13 @@ proj4@^2.1.4, proj4@^2.5.0:
     mgrs "1.0.0"
     wkt-parser "^1.2.0"
 
+proj4@^2.6.0:
+  version "2.6.2"
+  resolved "https://registry.yarnpkg.com/proj4/-/proj4-2.6.2.tgz#4665d7cbc30fd356375007c2fed53b07dbda1d67"
+  dependencies:
+    mgrs "1.0.0"
+    wkt-parser "^1.2.4"
+
 promise-inflight@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/promise-inflight/-/promise-inflight-1.0.1.tgz#98472870bf228132fcbdd868129bad12c3c029e3"
@@ -10472,6 +10507,10 @@ validator@^11.1.0:
   version "11.1.0"
   resolved "https://registry.yarnpkg.com/validator/-/validator-11.1.0.tgz#ac18cac42e0aa5902b603d7a5d9b7827e2346ac4"
 
+validator@^13.0.0:
+  version "13.1.1"
+  resolved "https://registry.yarnpkg.com/validator/-/validator-13.1.1.tgz#f8811368473d2173a9d8611572b58c5783f223bf"
+
 vary@~1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/vary/-/vary-1.1.2.tgz#2299f02c6ded30d4a5961b0b9f74524a18f634fc"
@@ -10697,6 +10736,10 @@ wide-align@^1.1.0:
 wkt-parser@^1.2.0:
   version "1.2.3"
   resolved "https://registry.yarnpkg.com/wkt-parser/-/wkt-parser-1.2.3.tgz#240fe1dacc816bfe5674b66180041059eaa9a9ba"
+
+wkt-parser@^1.2.4:
+  version "1.2.4"
+  resolved "https://registry.yarnpkg.com/wkt-parser/-/wkt-parser-1.2.4.tgz#e42ba7b96f13aef82a2da9056e2d87da0fec5393"
 
 wordwrap@~0.0.2:
   version "0.0.3"
